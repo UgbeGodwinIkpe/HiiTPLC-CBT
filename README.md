@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://chatgpt.com/s/m_6a6e4952995c8191a637ec409a7e8981" />
+<img width="1200" height="475" alt="GHBanner" src="https://canva.link/dzcqvyzb6ojfbt7" />
 </div>
 
 # HiiT CBT Management System
