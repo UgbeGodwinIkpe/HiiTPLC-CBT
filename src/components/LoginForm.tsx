@@ -55,6 +55,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onClose })
 
       onLoginSuccess(data.user);
     } catch (err: any) {
+      console.log({loginError:err})
       setErrorMessage(err.message || 'Login failed.');
     } finally {
       setLoading(false);
