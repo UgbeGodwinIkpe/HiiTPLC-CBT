@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://canva.link/dzcqvyzb6ojfbt7" />
+<img width="1200" height="475" alt="GHBanner" src="https://drive.google.com/file/d/1mpGRSjMt9b4mP474I8bOe2wcsW4DXYh1/view?usp=sharing" />
 </div>
 
 # HiiT CBT Management System
