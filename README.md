@@ -3,6 +3,7 @@
 </div>
 
 # HiiT CBT Management System
+<a href="https://hiitplc-cbt.onrender.com/">Checkout The Live</a>
 
 A modern, web-based Computer-Based Testing (CBT) and Academic Assessment Management System developed for HiiT PLC Abuja Training Centre. The platform streamlines the management of courses, instructors, students, examinations, and academic performance through a centralized, role-based application.
 
