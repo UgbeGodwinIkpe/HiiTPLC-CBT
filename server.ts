@@ -183,9 +183,9 @@ async function startServer() {
   });
 
   app.post('/api/instructors', (req, res) => {
-    const { name, email, phone, assignedCourseIds, assignedBatchIds } = req.body;
-    if (!name || !email) {
-      return res.status(400).json({ error: 'Name and email are required.' });
+    const { name, email, phone, assignedCourseIds, assignedBatchIds, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email  and password are required.' });
     }
 
     const newInst: User = {
@@ -197,7 +197,7 @@ async function startServer() {
       assignedCourseIds: assignedCourseIds || [],
       assignedBatchIds: assignedBatchIds || [],
       status: 'active',
-      password:"123456",
+      password:password,
       createdAt: new Date().toISOString()
     };
 

@@ -30,6 +30,7 @@ export const InstructorManagement: React.FC<InstructorManagementProps> = ({
     name: '',
     email: '',
     phone: '',
+    password:'',
     assignedCourseIds: [] as string[],
     assignedBatchIds: [] as string[]
   });
@@ -46,6 +47,7 @@ export const InstructorManagement: React.FC<InstructorManagementProps> = ({
       name: inst.name,
       email: inst.email,
       phone: inst.phone || '',
+      password:inst.password || '',
       assignedCourseIds: inst.assignedCourseIds || [],
       assignedBatchIds: inst.assignedBatchIds || []
     });
@@ -84,7 +86,7 @@ export const InstructorManagement: React.FC<InstructorManagementProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) return;
+    if (!formData.name || !formData.email || !formData.password) return;
 
     if (editingInstructor) {
       onEditInstructor(editingInstructor.id, formData);
@@ -269,6 +271,15 @@ export const InstructorManagement: React.FC<InstructorManagementProps> = ({
                   type="text"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
+                <input
+                  type="password" placeholder="Set instructor login password"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
                 />
               </div>
