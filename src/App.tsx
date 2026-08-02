@@ -564,7 +564,7 @@ export default function App() {
             <div className="p-12 text-center max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg space-y-4 my-12">
               <h2 className="text-2xl font-black text-[#002B49] dark:text-white">HiiT CBT Management System</h2>
               <p className="text-xs text-slate-500">
-                Please sign in with your role credentials or use the top demo persona switcher to explore the portal.
+                Please sign in with your role credentials to the portal.
               </p>
               <button
                 onClick={() => setIsLoginModalOpen(true)}
