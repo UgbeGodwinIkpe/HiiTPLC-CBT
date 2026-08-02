@@ -163,7 +163,7 @@ export const INITIAL_COURSES: Course[] = [
 export const INITIAL_BATCHES: Batch[] = [
   {
     id: 'batch_1',
-    name: '2026-B1 Abuja Morning (Web Development)',
+    name: '2026-B1 HAB Web Development (Morning)',
     courseId: 'crs_1',
     courseTitle: 'Web Development',
     instructorId: 'usr_inst_3',

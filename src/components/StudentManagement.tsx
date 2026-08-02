@@ -9,7 +9,8 @@ import {
   Upload,
   FileText,
   Filter,
-  CheckCircle2
+  CheckCircle2,
+  ShieldCheck
 } from 'lucide-react';
 import { StudentProfile, Course, Batch } from '../types';
 import { exportToExcel, exportToCSV, exportStudentsPDF } from '../utils/exportUtils';
@@ -22,6 +23,7 @@ interface StudentManagementProps {
   onImportStudents: (studentList: any[]) => void;
   onRemoveStudent: (id: string) => void;
   readOnly?: boolean;
+  isInstructorView?: boolean;
 }
 
 export const StudentManagement: React.FC<StudentManagementProps> = ({
@@ -31,7 +33,8 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
   onAddStudent,
   onImportStudents,
   onRemoveStudent,
-  readOnly = false
+  readOnly = false,
+  isInstructorView = false
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCourseFilter, setSelectedCourseFilter] = useState('');
@@ -45,7 +48,6 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
     regNumber: `HIIT/2026/00${students.length + 1}`,
     email: '',
     phone: '',
-    password:'',
     courseId: courses[0]?.id || '',
     batchId: batches[0]?.id || ''
   });
@@ -69,10 +71,9 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
   const handleOpenAdd = () => {
     setFormData({
       fullName: '',
-      regNumber: `HiiT/2026/00${students.length + 1}`,
+      regNumber: `HIIT/2026/00${students.length + 1}`,
       email: '',
       phone: '',
-      password:'',
       courseId: courses[0]?.id || '',
       batchId: batches[0]?.id || ''
     });
@@ -81,7 +82,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.regNumber || !formData.password) return;
+    if (!formData.fullName || !formData.regNumber) return;
     onAddStudent(formData);
     setIsAddModalOpen(false);
   };
@@ -109,7 +110,6 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
         regNumber: 'HIIT/2026/010',
         email: 'kemi.a@gmail.com',
         phone: '+234 802 111 9988',
-        password:'123456',
         courseId: courses[0]?.id,
         batchId: batches[0]?.id
       },
@@ -118,7 +118,6 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
         regNumber: 'HIIT/2026/011',
         email: 'usman.g@yahoo.com',
         phone: '+234 803 222 8877',
-        password:'123457',
         courseId: courses[0]?.id,
         batchId: batches[0]?.id
       }
@@ -181,6 +180,17 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
           )}
         </div>
       </div>
+
+      {isInstructorView && (
+        <div className="p-3.5 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-950 dark:text-blue-200 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+            <span>
+              <strong>Course Access Control Active:</strong> Showing students enrolled in your assigned courses and batches ({filteredStudents.length} student{filteredStudents.length !== 1 ? 's' : ''}).
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Filter & Search Controls */}
       <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -335,8 +345,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
                   Email Address
                 </label>
                 <input
-                  type="email" placeholder="e.g. student@gmail.com"
-                  required
+                  type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
@@ -348,22 +357,9 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
                   Phone Number
                 </label>
                 <input
-                  type="text" placeholder="080543213223"
-                  required
+                  type="text"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Password
-                </label>
-                <input
-                  type="password" placeholder="Set student login password"
-                  required
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
                 />
               </div>
@@ -375,7 +371,6 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
                   </label>
                   <select
                     value={formData.courseId}
-                    required
                     onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
                   >
@@ -393,7 +388,6 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
                   </label>
                   <select
                     value={formData.batchId}
-                    required
                     onChange={(e) => setFormData({ ...formData, batchId: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
                   >

@@ -63,6 +63,10 @@ async function startServer() {
       return res.status(400).json({ error: 'Please provide credentials.' });
     }
 
+    if (!identifier || !password) {
+      return res.status(400).json({ error: 'Please provide credentials.' });
+    }
+
     if (loginType === 'student') {
       // Find student by Reg Number or Email
       const student = studentsStore.find(
@@ -102,6 +106,7 @@ async function startServer() {
       if(user.role != loginType){
          return res.status(403).json({ error: `Login access denieled to ${loginType} portal. Check your login credentials` });
       }
+
       if (user.status === 'inactive') {
         return res.status(403).json({ error: 'Your account has been deactivated. Contact Faculty Coordinator.' });
       }
@@ -313,8 +318,22 @@ async function startServer() {
 
   // API ROUTE: Students
   app.get('/api/students', (req, res) => {
-    const { batchId, courseId, query } = req.query;
+    const { batchId, courseId, query, instructorId } = req.query;
     let list = [...studentsStore];
+
+    if (instructorId) {
+      const inst = usersStore.find((u) => u.id === instructorId);
+      const instCourseIds = new Set([
+        ...(inst?.assignedCourseIds || []),
+        ...batchesStore.filter((b) => b.instructorId === instructorId).map((b) => b.courseId)
+      ]);
+      const instBatchIds = new Set([
+        ...(inst?.assignedBatchIds || []),
+        ...batchesStore.filter((b) => b.instructorId === instructorId).map((b) => b.id)
+      ]);
+
+      list = list.filter((s) => instCourseIds.has(s.courseId) || instBatchIds.has(s.batchId));
+    }
 
     if (batchId) list = list.filter((s) => s.batchId === batchId);
     if (courseId) list = list.filter((s) => s.courseId === courseId);
@@ -334,8 +353,8 @@ async function startServer() {
 
   app.post('/api/students', (req, res) => {
     const { fullName, regNumber, email, phone, courseId, batchId, password } = req.body;
-    if (!fullName || !regNumber || !courseId || !batchId || !password) {
-      return res.status(400).json({ error: 'Full Name, Registration Number, Course, Password, and Batch are required.' });
+    if (!fullName || !regNumber || !courseId || !batchId) {
+      return res.status(400).json({ error: 'Full Name, Registration Number, Course, and Batch are required.' });
     }
 
     // Check Reg Number uniqueness
@@ -350,7 +369,7 @@ async function startServer() {
       id: `usr_std_${Date.now()}`,
       fullName,
       regNumber,
-      email: email || `${regNumber.replace(/[^a-zA-Z0-0]/g, '').toLowerCase()}@student.hiitplc.com`,
+      email: email || `${regNumber.replace(/[^a-zA-Z0-0]/g, '').toLowerCase()}@student.hiit.ng`,
       phone: phone || '',
       courseId,
       courseTitle: course ? course.title : '',

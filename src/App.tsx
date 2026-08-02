@@ -35,15 +35,6 @@ export default function App() {
   });
 
   // Current logged in user state (default seeded to Coordinator)
-  // {
-  //   id: 'usr_coord_1',
-  //   name: 'Prof. Adeleke Oladipo',
-  //   email: 'coordinator@hiit.ng',
-  //   role: 'coordinator',
-  //   phone: '+234 803 111 2233',
-  //   status: 'active',
-  //   createdAt: '2026-01-10T08:00:00Z'
-  // }
   const [currentUser, setCurrentUser] = useState<User | null>();
 
   const [activeTab, setActiveTab] = useState<string>('overview');
@@ -98,11 +89,13 @@ export default function App() {
       localStorage.setItem('hiit_theme', 'light');
     }
   }, [darkMode]);
+
   useEffect(() => {
       if (!currentUser) {
           setIsLoginModalOpen(true);
       }
   }, [currentUser]);
+
   // Load Data from Backend API
   const refreshAllData = async () => {
     try {
@@ -176,7 +169,7 @@ export default function App() {
     } else if (role === 'registrar') {
       setCurrentUser({
         id: 'usr_reg_1',
-        name: 'Mr. Jonnathan',
+        name: 'Mr. Jonathan',
         email: '',
         role: 'registrar',
         status: 'active',
@@ -186,7 +179,7 @@ export default function App() {
     } else if (role === 'student') {
       const studentProfile = students[0] || {
         id: 'usr_std_1',
-        fullName: 'Student',
+        fullName: 'Aisha Abubakar',
         regNumber: 'HIIT/2026/001',
         email: '',
         phone: '+234 812 345 6789',
@@ -506,6 +499,42 @@ export default function App() {
 
   const pendingQuestionsCount = questions.filter((q) => q.status === 'pending').length;
 
+  // Derive Instructor specific course and batch scope
+  const instructorCourseIds = new Set<string>([
+    ...(currentUser?.assignedCourseIds || []),
+    ...batches
+      .filter((b) => b.instructorId === currentUser?.id || currentUser?.assignedBatchIds?.includes(b.id))
+      .map((b) => b.courseId)
+  ]);
+
+  const instructorBatchIds = new Set<string>([
+    ...(currentUser?.assignedBatchIds || []),
+    ...batches.filter((b) => b.instructorId === currentUser?.id).map((b) => b.id)
+  ]);
+
+  // Filtered scope lists for instructor role
+  const instructorStudents = currentUser?.role === 'instructor'
+    ? students.filter(
+        (s) => instructorCourseIds.has(s.courseId) || instructorBatchIds.has(s.batchId)
+      )
+    : students;
+
+  const instructorCourses = currentUser?.role === 'instructor'
+    ? courses.filter((c) => instructorCourseIds.has(c.id))
+    : courses;
+
+  const instructorBatches = currentUser?.role === 'instructor'
+    ? batches.filter((b) => instructorBatchIds.has(b.id) || instructorCourseIds.has(b.courseId))
+    : batches;
+
+  const instructorQuestions = currentUser?.role === 'instructor'
+    ? questions.filter((q) => q.instructorId === currentUser.id || instructorCourseIds.has(q.courseId))
+    : questions;
+
+  const instructorExams = currentUser?.role === 'instructor'
+    ? exams.filter((e) => e.instructorId === currentUser.id || instructorCourseIds.has(e.courseId))
+    : exams;
+
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 flex flex-col">
       {/* Top Navbar */}
@@ -689,26 +718,30 @@ export default function App() {
                         <p className="text-xs text-slate-300 mt-1">Manage batches, build question banks, and create CBT tests.</p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
                           <p className="text-xs font-bold text-slate-400 uppercase">Assigned Batches</p>
-                          <p className="text-2xl font-black text-[#002B49] dark:text-white mt-1">{batches.length}</p>
+                          <p className="text-2xl font-black text-[#002B49] dark:text-white mt-1">{instructorBatches.length}</p>
                         </div>
                         <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
-                          <p className="text-xs font-bold text-slate-400 uppercase">Total Questions Authored</p>
-                          <p className="text-2xl font-black text-indigo-600 mt-1">{questions.length}</p>
+                          <p className="text-xs font-bold text-slate-400 uppercase">Students in Taught Courses</p>
+                          <p className="text-2xl font-black text-emerald-600 mt-1">{instructorStudents.length}</p>
+                        </div>
+                        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+                          <p className="text-xs font-bold text-slate-400 uppercase">Questions Authored</p>
+                          <p className="text-2xl font-black text-indigo-600 mt-1">{instructorQuestions.length}</p>
                         </div>
                         <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
                           <p className="text-xs font-bold text-slate-400 uppercase">Exams Created</p>
-                          <p className="text-2xl font-black text-[#C8102E] mt-1">{exams.length}</p>
+                          <p className="text-2xl font-black text-[#C8102E] mt-1">{instructorExams.length}</p>
                         </div>
                       </div>
                     </div>
                   )}
                   {activeTab === 'batches' && (
                     <BatchManagement
-                      batches={batches}
-                      courses={courses}
+                      batches={instructorBatches}
+                      courses={instructorCourses.length > 0 ? instructorCourses : courses}
                       instructors={instructors}
                       onCreateBatch={handleCreateBatch}
                       onEditBatch={handleEditBatch}
@@ -718,18 +751,19 @@ export default function App() {
                   )}
                   {activeTab === 'students' && (
                     <StudentManagement
-                      students={students}
-                      courses={courses}
-                      batches={batches}
+                      students={instructorStudents}
+                      courses={instructorCourses.length > 0 ? instructorCourses : courses}
+                      batches={instructorBatches.length > 0 ? instructorBatches : batches}
                       onAddStudent={handleAddStudent}
                       onImportStudents={handleImportStudents}
                       onRemoveStudent={handleRemoveStudent}
+                      isInstructorView={true}
                     />
                   )}
                   {activeTab === 'questions' && (
                     <QuestionBank
-                      questions={questions}
-                      courses={courses}
+                      questions={instructorQuestions}
+                      courses={instructorCourses.length > 0 ? instructorCourses : courses}
                       onCreateQuestion={handleCreateQuestion}
                       onEditQuestion={handleEditQuestion}
                       onDeleteQuestion={handleDeleteQuestion}
@@ -739,10 +773,10 @@ export default function App() {
                   )}
                   {activeTab === 'exams' && (
                     <ExamCreator
-                      exams={exams}
-                      courses={courses}
-                      batches={batches}
-                      questions={questions}
+                      exams={instructorExams}
+                      courses={instructorCourses.length > 0 ? instructorCourses : courses}
+                      batches={instructorBatches.length > 0 ? instructorBatches : batches}
+                      questions={instructorQuestions}
                       onCreateExam={handleCreateExam}
                       onUpdateExamStatus={handleUpdateExamStatus}
                       onDeleteExam={handleDeleteExam}
@@ -751,11 +785,18 @@ export default function App() {
                   )}
                   {activeTab === 'reports' && (
                     <ReportsAnalytics
-                      stats={stats}
-                      attempts={attempts}
-                      courses={courses}
-                      batches={batches}
-                      students={students}
+                      stats={{
+                        ...stats,
+                        totalStudents: instructorStudents.length,
+                        totalCourses: instructorCourses.length,
+                        totalBatches: instructorBatches.length
+                      }}
+                      attempts={attempts.filter((a) =>
+                        instructorStudents.some((s) => s.id === a.studentId || s.regNumber === a.studentRegNumber)
+                      )}
+                      courses={instructorCourses}
+                      batches={instructorBatches}
+                      students={instructorStudents}
                     />
                   )}
                 </>
