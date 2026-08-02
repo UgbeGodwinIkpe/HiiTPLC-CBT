@@ -103,7 +103,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onClose })
                 roleTab === 'registrar' ? 'bg-[#002B49] text-white shadow-xs' : 'text-slate-600 dark:text-slate-400'
               }`}
             >
-              Registrar
+              HTIDEF
             </button>
             <button
               type="button"

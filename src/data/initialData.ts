@@ -71,7 +71,7 @@ export const INITIAL_USERS: User[] = [
   },
   {
     id: 'usr_reg_1',
-    name: 'Mr. Jonathan Ogwumike',
+    name: 'HTIDEF',
     email: 'htidef@hiitplc.com',
     role: 'registrar',
     phone: '+234 801 222 3344',
