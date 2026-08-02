@@ -48,6 +48,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
     regNumber: `HIIT/2026/00${students.length + 1}`,
     email: '',
     phone: '',
+    password:'',
     courseId: courses[0]?.id || '',
     batchId: batches[0]?.id || ''
   });
@@ -74,6 +75,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
       regNumber: `HIIT/2026/00${students.length + 1}`,
       email: '',
       phone: '',
+      password:'',
       courseId: courses[0]?.id || '',
       batchId: batches[0]?.id || ''
     });
@@ -110,6 +112,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
         regNumber: 'HIIT/2026/010',
         email: 'kemi.a@gmail.com',
         phone: '+234 802 111 9988',
+        password:'123456',
         courseId: courses[0]?.id,
         batchId: batches[0]?.id
       },
@@ -118,6 +121,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
         regNumber: 'HIIT/2026/011',
         email: 'usman.g@yahoo.com',
         phone: '+234 803 222 8877',
+        password:'123456',
         courseId: courses[0]?.id,
         batchId: batches[0]?.id
       }
@@ -360,6 +364,17 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
                   type="text"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={formData.password} placeholder="Set a  student login password"
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
                 />
               </div>

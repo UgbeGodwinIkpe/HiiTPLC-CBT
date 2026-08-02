@@ -353,7 +353,7 @@ async function startServer() {
 
   app.post('/api/students', (req, res) => {
     const { fullName, regNumber, email, phone, courseId, batchId, password } = req.body;
-    if (!fullName || !regNumber || !courseId || !batchId) {
+    if (!fullName || !regNumber || !courseId || !batchId || !password) {
       return res.status(400).json({ error: 'Full Name, Registration Number, Course, and Batch are required.' });
     }
 
