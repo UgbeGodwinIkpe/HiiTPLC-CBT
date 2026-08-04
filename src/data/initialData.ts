@@ -396,44 +396,6 @@ export const INITIAL_SETTINGS: SystemSettings = {
 
 export const INITIAL_ATTENDANCE_SESSIONS: AttendanceSession[] = [
   {
-    id: 'att_sess_1',
-    courseId: 'crs_1',
-    courseTitle: 'Full Stack Software Engineering (Python & React)',
-    courseCode: 'SE-301',
-    batchId: 'batch_1',
-    batchName: '2026-B1 Abuja Morning (Software Eng)',
-    instructorId: 'usr_inst_1',
-    instructorName: 'Dr. Emmanuel Okafor',
-    date: '2026-07-28',
-    topic: 'Lecture 1: Full Stack System Architecture & Docker Setup',
-    records: [
-      { studentId: 'usr_std_1', studentRegNumber: 'HIIT/2026/001', studentName: 'Aisha Abubakar', status: 'present' },
-      { studentId: 'usr_std_2', studentRegNumber: 'HIIT/2026/002', studentName: 'Daniel Okon', status: 'present' },
-      { studentId: 'usr_std_5', studentRegNumber: 'HIIT/2026/005', studentName: 'Blessing Adebayo', status: 'present' }
-    ],
-    createdAt: '2026-07-28T10:00:00Z',
-    updatedAt: '2026-07-28T10:00:00Z'
-  },
-  {
-    id: 'att_sess_2',
-    courseId: 'crs_1',
-    courseTitle: 'Full Stack Software Engineering (Python & React)',
-    courseCode: 'SE-301',
-    batchId: 'batch_1',
-    batchName: '2026-B1 Abuja Morning (Software Eng)',
-    instructorId: 'usr_inst_1',
-    instructorName: 'Dr. Emmanuel Okafor',
-    date: '2026-07-30',
-    topic: 'Lecture 2: React Component Hierarchy & State Hooks',
-    records: [
-      { studentId: 'usr_std_1', studentRegNumber: 'HIIT/2026/001', studentName: 'Aisha Abubakar', status: 'present' },
-      { studentId: 'usr_std_2', studentRegNumber: 'HIIT/2026/002', studentName: 'Daniel Okon', status: 'late', remarks: 'Joined 15 mins late due to traffic' },
-      { studentId: 'usr_std_5', studentRegNumber: 'HIIT/2026/005', studentName: 'Blessing Adebayo', status: 'present' }
-    ],
-    createdAt: '2026-07-30T10:00:00Z',
-    updatedAt: '2026-07-30T10:00:00Z'
-  },
-  {
     id: 'att_sess_3',
     courseId: 'crs_1',
     courseTitle: 'Full Stack Software Engineering (Python & React)',
@@ -468,23 +430,6 @@ export const INITIAL_ATTENDANCE_SESSIONS: AttendanceSession[] = [
     ],
     createdAt: '2026-07-29T14:00:00Z',
     updatedAt: '2026-07-29T14:00:00Z'
-  },
-  {
-    id: 'att_sess_5',
-    courseId: 'crs_3',
-    courseTitle: 'Cybersecurity & Ethical Hacking Specialist',
-    courseCode: 'CYBER-201',
-    batchId: 'batch_3',
-    batchName: '2026-B2 Abuja Evening (Cybersecurity)',
-    instructorId: 'usr_inst_3',
-    instructorName: 'Mr. Chidubem Nnamdi',
-    date: '2026-07-31',
-    topic: 'Lecture 1: Network Reconnaissance & Port Scanning Tools',
-    records: [
-      { studentId: 'usr_std_4', studentRegNumber: 'HIIT/2026/004', studentName: 'Ibrahim Musa', status: 'present' }
-    ],
-    createdAt: '2026-07-31T17:00:00Z',
-    updatedAt: '2026-07-31T17:00:00Z'
   }
 ];
 
