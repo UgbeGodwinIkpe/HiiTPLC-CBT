@@ -415,14 +415,14 @@ export const INITIAL_ATTENDANCE_SESSIONS: AttendanceSession[] = [
     updatedAt: '2026-08-01T10:00:00Z'
   },
   {
-    id: 'att_sess_4',
-    courseId: 'crs_2',
-    courseTitle: 'Data Science & Artificial Intelligence',
+    id: 'att_sess_1',
+    courseId: 'crs_6',
+    courseTitle: 'Python Programming & Django Framework',
     courseCode: 'DS-401',
-    batchId: 'batch_2',
+    batchId: 'batch_1',
     batchName: '2026-B1 Abuja Afternoon (Data Science)',
-    instructorId: 'usr_inst_2',
-    instructorName: 'Engr. Fatima Bello',
+    instructorId: 'usr_inst_4',
+    instructorName: 'Godwin Ugbe',
     date: '2026-07-29',
     topic: 'Lecture 1: Python Data Science Ecosystem & NumPy Arrays',
     records: [
