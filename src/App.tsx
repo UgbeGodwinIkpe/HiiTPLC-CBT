@@ -10,7 +10,8 @@ import {
   ExamAttempt,
   ActivityLog,
   SystemSettings,
-  SystemStats
+  SystemStats,
+  AttendanceSession
 } from './types';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
@@ -25,6 +26,7 @@ import { ExamCreator } from './components/ExamCreator';
 import { StudentDashboard } from './components/StudentDashboard';
 import { CBTExamInterface } from './components/CBTExamInterface';
 import { ReportsAnalytics } from './components/ReportsAnalytics';
+import { ClassAttendance } from './components/ClassAttendance';
 import { LoginForm } from './components/LoginForm';
 import { exportSingleStudentResultPDF } from './utils/exportUtils';
 import { Clock, ShieldCheck, Download, Award, CheckCircle2, XCircle } from 'lucide-react';
@@ -48,6 +50,7 @@ export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [exams, setExams] = useState<Exam[]>([]);
   const [attempts, setAttempts] = useState<ExamAttempt[]>([]);
+   const [attendanceSessions, setAttendanceSessions] = useState<AttendanceSession[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [settings, setSettings] = useState<SystemSettings>({
     showResultsImmediately: true,
@@ -107,6 +110,7 @@ export default function App() {
         resQuestions,
         resExams,
         resAttempts,
+        resAttendance,
         resLogs,
         resSettings,
         resStats
@@ -118,6 +122,7 @@ export default function App() {
         fetch('/api/questions').then((r) => r.json()),
         fetch('/api/exams').then((r) => r.json()),
         fetch('/api/attempts').then((r) => r.json()),
+        fetch('/api/attendance').then((r) => r.json()),
         fetch('/api/logs').then((r) => r.json()),
         fetch('/api/settings').then((r) => r.json()),
         fetch('/api/stats').then((r) => r.json())
@@ -130,12 +135,37 @@ export default function App() {
       if (Array.isArray(resQuestions)) setQuestions(resQuestions);
       if (Array.isArray(resExams)) setExams(resExams);
       if (Array.isArray(resAttempts)) setAttempts(resAttempts);
+      if (Array.isArray(resAttendance)) setAttendanceSessions(resAttendance);
       if (Array.isArray(resLogs)) setLogs(resLogs);
       if (resSettings) setSettings(resSettings);
       if (resStats) setStats(resStats);
     } catch (err) {
       console.error('Failed to load API data:', err);
     }
+  };
+
+  // Attendance Handlers
+  const handleSaveAttendance = async (sessionData: Partial<AttendanceSession>) => {
+    await fetch('/api/attendance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sessionData)
+    });
+    refreshAllData();
+  };
+
+  const handleUpdateAttendance = async (id: string, sessionData: Partial<AttendanceSession>) => {
+    await fetch(`/api/attendance/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sessionData)
+    });
+    refreshAllData();
+  };
+
+  const handleDeleteAttendance = async (id: string) => {
+    await fetch(`/api/attendance/${id}`, { method: 'DELETE' });
+    refreshAllData();
   };
 
   useEffect(() => {
@@ -634,6 +664,18 @@ export default function App() {
                       onAddStudent={handleAddStudent}
                       onImportStudents={handleImportStudents}
                       onRemoveStudent={handleRemoveStudent}
+                    />
+                  )}
+                  {activeTab === 'attendance' && (
+                    <ClassAttendance
+                      currentUser={currentUser}
+                      courses={courses}
+                      batches={batches}
+                      students={students}
+                      attendanceSessions={attendanceSessions}
+                      onSaveAttendance={handleSaveAttendance}
+                      onUpdateAttendance={handleUpdateAttendance}
+                      onDeleteAttendance={handleDeleteAttendance}
                     />
                   )}
                   {activeTab === 'questions' && (

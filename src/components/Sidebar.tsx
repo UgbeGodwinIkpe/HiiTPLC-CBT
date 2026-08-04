@@ -13,7 +13,8 @@ import {
   Settings,
   Sparkles,
   Award,
-  Eye
+  Eye,
+  CalendarCheck
 } from 'lucide-react';
 import { UserRole } from '../types';
 
@@ -46,6 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'batches', label: 'Batch Management', icon: FolderGit2 },
           { id: 'students', label: 'Student Directory', icon: UserCheck },
           { id: 'questions', label: 'Question Bank', icon: FileQuestion },
+          { id: 'attendance', label: 'Class Attendance', icon: CalendarCheck },
           { id: 'exams', label: 'Exams & CBT Setup', icon: FileSpreadsheet },
           { id: 'reports', label: 'Results & Analytics', icon: BarChart3 },
           { id: 'logs', label: 'Audit Logs', icon: Clock },
@@ -57,6 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'overview', label: 'Instructor Dashboard', icon: LayoutDashboard },
           { id: 'batches', label: 'Batch Management', icon: FolderGit2 },
           { id: 'students', label: 'Student Roster', icon: UserCheck },
+          { id: 'attendance', label: 'Class Attendance', icon: CalendarCheck },
           { id: 'questions', label: 'Question Bank', icon: FileQuestion },
           { id: 'exams', label: 'Exam Creator', icon: FileSpreadsheet },
           { id: 'reports', label: 'Results & Performance', icon: BarChart3 },
@@ -68,6 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'courses', label: 'View Courses', icon: BookOpen },
           { id: 'batches', label: 'View Batches', icon: FolderGit2 },
           { id: 'students', label: 'Student Directory', icon: UserCheck },
+          { id: 'attendance', label: 'Class Attendance', icon: CalendarCheck },
           { id: 'questions', label: 'View Question Bank', icon: FileQuestion },
           { id: 'exams', label: 'View Exams', icon: FileSpreadsheet },
           { id: 'reports', label: 'Official Results', icon: BarChart3 },
@@ -76,6 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       case 'student':
         return [
           { id: 'overview', label: 'Student Portal', icon: LayoutDashboard },
+          { id: 'cbt-exams', label: 'Available CBT Exams', icon: FileSpreadsheet },
           { id: 'cbt-exams', label: 'Available CBT Exams', icon: FileSpreadsheet },
           { id: 'my-results', label: 'My Statement of Result', icon: Award },
           { id: 'profile', label: 'My Academic Profile', icon: UserCheck },

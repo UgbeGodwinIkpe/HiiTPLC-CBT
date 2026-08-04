@@ -161,3 +161,29 @@ export interface SystemStats {
   failRatePercent: number;
   totalQuestions: number;
 }
+
+export type AttendanceStatus = 'present' | 'absent' | 'late' | 'excused';
+
+export interface StudentAttendanceRecord {
+  studentId: string;
+  studentRegNumber: string;
+  studentName: string;
+  status: AttendanceStatus;
+  remarks?: string;
+}
+
+export interface AttendanceSession {
+  id: string;
+  courseId: string;
+  courseTitle: string;
+  courseCode?: string;
+  batchId: string;
+  batchName: string;
+  instructorId: string;
+  instructorName: string;
+  date: string; // YYYY-MM-DD
+  topic: string; // e.g. "Lecture 1: Introduction"
+  records: StudentAttendanceRecord[];
+  createdAt: string;
+  updatedAt: string;
+}

@@ -10,7 +10,8 @@ import {
   INITIAL_EXAMS,
   INITIAL_ATTEMPTS,
   INITIAL_LOGS,
-  INITIAL_SETTINGS
+  INITIAL_SETTINGS,
+  INITIAL_ATTENDANCE_SESSIONS
 } from './src/data/initialData';
 import {
   User,
@@ -22,7 +23,8 @@ import {
   ExamAttempt,
   ActivityLog,
   SystemSettings,
-  SystemStats
+  SystemStats,
+  AttendanceSession
 } from './src/types';
 
 // In-Memory Database Stores (seeded with default data)
@@ -35,6 +37,7 @@ let examsStore: Exam[] = [...INITIAL_EXAMS];
 let attemptsStore: ExamAttempt[] = [...INITIAL_ATTEMPTS];
 let logsStore: ActivityLog[] = [...INITIAL_LOGS];
 let settingsStore: SystemSettings = { ...INITIAL_SETTINGS };
+let attendanceStore: AttendanceSession[] = [...INITIAL_ATTENDANCE_SESSIONS];
 
 const addLog = (userId: string, userName: string, userRole: any, action: string, details: string) => {
   const newLog: ActivityLog = {
@@ -815,6 +818,87 @@ async function startServer() {
     res.json(stats);
   });
 
+  // API ROUTE: Attendance Sessions
+  app.get('/api/attendance', (req, res) => {
+    const { courseId, batchId, studentId, instructorId } = req.query;
+    let list = [...attendanceStore];
+
+    if (courseId) list = list.filter((s) => s.courseId === courseId);
+    if (batchId) list = list.filter((s) => s.batchId === batchId);
+    if (instructorId) list = list.filter((s) => s.instructorId === instructorId);
+    if (studentId) {
+      list = list.filter((s) => s.records.some((r) => r.studentId === studentId));
+    }
+
+    res.json(list);
+  });
+
+  app.post('/api/attendance', (req, res) => {
+    const { courseId, batchId, instructorId, instructorName, date, topic, records } = req.body;
+    if (!courseId || !batchId || !date || !topic || !Array.isArray(records)) {
+      return res.status(400).json({ error: 'courseId, batchId, date, topic, and records array are required.' });
+    }
+
+    const course = coursesStore.find((c) => c.id === courseId);
+    const batch = batchesStore.find((b) => b.id === batchId);
+
+    const newSession: AttendanceSession = {
+      id: `att_sess_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      courseId,
+      courseTitle: course ? course.title : 'Course',
+      courseCode: course ? course.code : '',
+      batchId,
+      batchName: batch ? batch.name : 'Batch',
+      instructorId: instructorId || 'usr_inst_1',
+      instructorName: instructorName || 'Instructor',
+      date,
+      topic,
+      records,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    attendanceStore.unshift(newSession);
+    addLog(
+      newSession.instructorId,
+      newSession.instructorName,
+      'instructor',
+      'ATTENDANCE_MARKED',
+      `Marked attendance for "${newSession.topic}" (${newSession.batchName}) - ${records.length} students`
+    );
+
+    res.status(201).json(newSession);
+  });
+
+  app.put('/api/attendance/:id', (req, res) => {
+    const { id } = req.params;
+    const idx = attendanceStore.findIndex((s) => s.id === id);
+    if (idx === -1) return res.status(404).json({ error: 'Attendance session not found.' });
+
+    attendanceStore[idx] = {
+      ...attendanceStore[idx],
+      ...req.body,
+      updatedAt: new Date().toISOString()
+    };
+
+    addLog(
+      attendanceStore[idx].instructorId,
+      attendanceStore[idx].instructorName,
+      'instructor',
+      'ATTENDANCE_UPDATED',
+      `Updated attendance record for "${attendanceStore[idx].topic}"`
+    );
+
+    res.json(attendanceStore[idx]);
+  });
+
+  app.delete('/api/attendance/:id', (req, res) => {
+    const { id } = req.params;
+    attendanceStore = attendanceStore.filter((s) => s.id !== id);
+    res.json({ success: true });
+  });
+
+
   // API ROUTE: Activity Logs
   app.get('/api/logs', (req, res) => {
     res.json(logsStore.slice(0, 50));
@@ -842,10 +926,10 @@ async function startServer() {
     attemptsStore = [...INITIAL_ATTEMPTS];
     logsStore = [...INITIAL_LOGS];
     settingsStore = { ...INITIAL_SETTINGS };
+    attendanceStore = [...INITIAL_ATTENDANCE_SESSIONS];
 
     res.json({ message: 'System database successfully reset to factory demo state!' });
   });
-
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

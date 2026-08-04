@@ -167,3 +167,51 @@ export const exportSingleStudentResultPDF = (attempt: ExamAttempt, courseTitle: 
 
   doc.save(`Result_${attempt.studentRegNumber.replace(/\//g, '_')}_${attempt.examId}.pdf`);
 };
+
+export const exportAttendancePDF = (sessions: any[], title = 'Class Attendance Report') => {
+  const doc = new jsPDF();
+
+  // Header Banner
+  doc.setFillColor(0, 43, 73); // HiiT Navy #002B49
+  doc.rect(0, 0, 210, 28, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('HiiT PLC - ABUJA TRAINING CENTRE', 14, 12);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`OFFICIAL CLASS ATTENDANCE REPORT: ${title.toUpperCase()}`, 14, 20);
+
+  doc.setTextColor(50, 50, 50);
+  doc.setFontSize(9);
+  doc.text(`Generated Date: ${new Date().toLocaleDateString()} | Total Sessions Recorded: ${sessions.length}`, 14, 35);
+
+  const tableData = sessions.map((s, idx) => {
+    const presentCount = s.records ? s.records.filter((r: any) => r.status === 'present' || r.status === 'late').length : 0;
+    const totalCount = s.records ? s.records.length : 0;
+    const pct = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0;
+
+    return [
+      idx + 1,
+      s.date,
+      s.courseCode || s.courseTitle,
+      s.batchName,
+      s.topic,
+      s.instructorName,
+      `${presentCount}/${totalCount} (${pct}%)`
+    ];
+  });
+
+  autoTable(doc, {
+    startY: 40,
+    head: [['#', 'Date', 'Course', 'Batch', 'Session Topic', 'Instructor', 'Attendance Rate']],
+    body: tableData,
+    theme: 'grid',
+    headStyles: { fillColor: [0, 43, 73], textColor: [255, 255, 255], fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [248, 250, 252] },
+    styles: { fontSize: 8, cellPadding: 3 }
+  });
+
+  doc.save(`HiiT_Class_Attendance_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
+};
+
