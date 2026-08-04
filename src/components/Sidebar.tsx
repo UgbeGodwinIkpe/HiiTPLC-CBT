@@ -46,8 +46,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           },
           { id: 'batches', label: 'Batch Management', icon: FolderGit2 },
           { id: 'students', label: 'Student Directory', icon: UserCheck },
-          { id: 'questions', label: 'Question Bank', icon: FileQuestion },
           { id: 'attendance', label: 'Class Attendance', icon: CalendarCheck },
+          { id: 'questions', label: 'Question Bank', icon: FileQuestion },
           { id: 'exams', label: 'Exams & CBT Setup', icon: FileSpreadsheet },
           { id: 'reports', label: 'Results & Analytics', icon: BarChart3 },
           { id: 'logs', label: 'Audit Logs', icon: Clock },
@@ -80,7 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       case 'student':
         return [
           { id: 'overview', label: 'Student Portal', icon: LayoutDashboard },
-          { id: 'cbt-exams', label: 'Available CBT Exams', icon: FileSpreadsheet },
+          { id: 'attendance', label: 'My Attendance', icon: CalendarCheck },
           { id: 'cbt-exams', label: 'Available CBT Exams', icon: FileSpreadsheet },
           { id: 'my-results', label: 'My Statement of Result', icon: Award },
           { id: 'profile', label: 'My Academic Profile', icon: UserCheck },
@@ -90,6 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return [];
     }
   };
+
 
   const menuItems = getMenuItems();
 

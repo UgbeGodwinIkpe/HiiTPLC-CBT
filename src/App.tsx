@@ -37,7 +37,15 @@ export default function App() {
   });
 
   // Current logged in user state (default seeded to Coordinator)
-  const [currentUser, setCurrentUser] = useState<User | null>();
+  const [currentUser, setCurrentUser] = useState<User | null>({
+    id: 'usr_coord_1',
+    name: 'Prof. Adeleke Oladipo',
+    email: 'coordinator@hiit.ng',
+    role: 'coordinator',
+    phone: '+234 803 111 2233',
+    status: 'active',
+    createdAt: '2026-01-10T08:00:00Z'
+  });
 
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -50,7 +58,7 @@ export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [exams, setExams] = useState<Exam[]>([]);
   const [attempts, setAttempts] = useState<ExamAttempt[]>([]);
-   const [attendanceSessions, setAttendanceSessions] = useState<AttendanceSession[]>([]);
+  const [attendanceSessions, setAttendanceSessions] = useState<AttendanceSession[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [settings, setSettings] = useState<SystemSettings>({
     showResultsImmediately: true,
@@ -92,12 +100,6 @@ export default function App() {
       localStorage.setItem('hiit_theme', 'light');
     }
   }, [darkMode]);
-
-  useEffect(() => {
-      if (!currentUser) {
-          setIsLoginModalOpen(true);
-      }
-  }, [currentUser]);
 
   // Load Data from Backend API
   const refreshAllData = async () => {
@@ -177,8 +179,8 @@ export default function App() {
     if (role === 'coordinator') {
       setCurrentUser({
         id: 'usr_coord_1',
-        name: 'FCHATC',
-        email: '',
+        name: 'Prof. Adeleke Oladipo',
+        email: 'coordinator@hiit.ng',
         role: 'coordinator',
         status: 'active',
         createdAt: '2026-01-10T08:00:00Z'
@@ -187,8 +189,8 @@ export default function App() {
     } else if (role === 'instructor') {
       setCurrentUser({
         id: 'usr_inst_1',
-        name: 'Instructor',
-        email: '',
+        name: 'Dr. Emmanuel Okafor',
+        email: 'instructor.okafor@hiit.ng',
         role: 'instructor',
         assignedCourseIds: ['crs_1'],
         assignedBatchIds: ['batch_1'],
@@ -199,8 +201,8 @@ export default function App() {
     } else if (role === 'registrar') {
       setCurrentUser({
         id: 'usr_reg_1',
-        name: 'Mr. Jonathan',
-        email: '',
+        name: 'Mrs. Amina Yusuf',
+        email: 'registrar@hiit.ng',
         role: 'registrar',
         status: 'active',
         createdAt: '2026-01-05T08:00:00Z'
@@ -211,7 +213,7 @@ export default function App() {
         id: 'usr_std_1',
         fullName: 'Aisha Abubakar',
         regNumber: 'HIIT/2026/001',
-        email: '',
+        email: 'aisha.a@gmail.com',
         phone: '+234 812 345 6789',
         courseId: 'crs_1',
         batchId: 'batch_1'
@@ -594,7 +596,7 @@ export default function App() {
             <div className="p-12 text-center max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg space-y-4 my-12">
               <h2 className="text-2xl font-black text-[#002B49] dark:text-white">HiiT CBT Management System</h2>
               <p className="text-xs text-slate-500">
-                Please sign in with your role credentials to the portal.
+                Please sign in with your role credentials or use the top demo persona switcher to explore the portal.
               </p>
               <button
                 onClick={() => setIsLoginModalOpen(true)}
@@ -802,6 +804,18 @@ export default function App() {
                       isInstructorView={true}
                     />
                   )}
+                  {activeTab === 'attendance' && (
+                    <ClassAttendance
+                      currentUser={currentUser}
+                      courses={instructorCourses.length > 0 ? instructorCourses : courses}
+                      batches={instructorBatches.length > 0 ? instructorBatches : batches}
+                      students={instructorStudents}
+                      attendanceSessions={attendanceSessions}
+                      onSaveAttendance={handleSaveAttendance}
+                      onUpdateAttendance={handleUpdateAttendance}
+                      onDeleteAttendance={handleDeleteAttendance}
+                    />
+                  )}
                   {activeTab === 'questions' && (
                     <QuestionBank
                       questions={instructorQuestions}
@@ -863,6 +877,19 @@ export default function App() {
                   {activeTab === 'courses' && <CourseManagement courses={courses} onAddCourse={() => {}} onEditCourse={() => {}} onDeleteCourse={() => {}} onToggleCourseStatus={() => {}} readOnly />}
                   {activeTab === 'batches' && <BatchManagement batches={batches} courses={courses} instructors={instructors} onCreateBatch={() => {}} onEditBatch={() => {}} onCloseBatch={() => {}} onDeleteBatch={() => {}} readOnly />}
                   {activeTab === 'students' && <StudentManagement students={students} courses={courses} batches={batches} onAddStudent={() => {}} onImportStudents={() => {}} onRemoveStudent={() => {}} readOnly />}
+                  {activeTab === 'attendance' && (
+                    <ClassAttendance
+                      currentUser={currentUser}
+                      courses={courses}
+                      batches={batches}
+                      students={students}
+                      attendanceSessions={attendanceSessions}
+                      onSaveAttendance={() => {}}
+                      onUpdateAttendance={() => {}}
+                      onDeleteAttendance={() => {}}
+                      readOnly={true}
+                    />
+                  )}
                   {activeTab === 'questions' && <QuestionBank questions={questions} courses={courses} onCreateQuestion={() => {}} onEditQuestion={() => {}} onDeleteQuestion={() => {}} onSubmitForApproval={() => {}} onImportQuestions={() => {}} readOnly />}
                   {activeTab === 'exams' && <ExamCreator exams={exams} courses={courses} batches={batches} questions={questions} onCreateExam={() => {}} onUpdateExamStatus={() => {}} onDeleteExam={() => {}} userRole="registrar" readOnly />}
                   {activeTab === 'reports' && <ReportsAnalytics stats={stats} attempts={attempts} courses={courses} batches={batches} students={students} />}
@@ -880,6 +907,19 @@ export default function App() {
                       settings={settings}
                       onStartExam={handleStartExam}
                       onViewResultDetails={(att) => setViewingResult(att)}
+                    />
+                  )}
+                  {activeTab === 'attendance' && (
+                    <ClassAttendance
+                      currentUser={currentUser}
+                      courses={courses}
+                      batches={batches}
+                      students={students}
+                      attendanceSessions={attendanceSessions}
+                      onSaveAttendance={() => {}}
+                      onUpdateAttendance={() => {}}
+                      onDeleteAttendance={() => {}}
+                      readOnly={true}
                     />
                   )}
                 </>

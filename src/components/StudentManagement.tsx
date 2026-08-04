@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { StudentProfile, Course, Batch } from '../types';
 import { exportToExcel, exportToCSV, exportStudentsPDF } from '../utils/exportUtils';
+import { randomInt } from 'crypto';
 
 interface StudentManagementProps {
   students: StudentProfile[];
@@ -72,7 +73,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({
   const handleOpenAdd = () => {
     setFormData({
       fullName: '',
-      regNumber: `HIIT/2026/00${students.length + 1}`,
+      regNumber: ``,
       email: '',
       phone: '',
       password:'',
