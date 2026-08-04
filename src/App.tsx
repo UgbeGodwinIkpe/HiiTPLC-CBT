@@ -37,15 +37,7 @@ export default function App() {
   });
 
   // Current logged in user state (default seeded to Coordinator)
-  const [currentUser, setCurrentUser] = useState<User | null>({
-    id: 'usr_coord_1',
-    name: 'Prof. Adeleke Oladipo',
-    email: 'coordinator@hiit.ng',
-    role: 'coordinator',
-    phone: '+234 803 111 2233',
-    status: 'active',
-    createdAt: '2026-01-10T08:00:00Z'
-  });
+  const [currentUser, setCurrentUser] = useState<User | null>();
 
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -179,8 +171,8 @@ export default function App() {
     if (role === 'coordinator') {
       setCurrentUser({
         id: 'usr_coord_1',
-        name: 'Prof. Adeleke Oladipo',
-        email: 'coordinator@hiit.ng',
+        name: '',
+        email: '',
         role: 'coordinator',
         status: 'active',
         createdAt: '2026-01-10T08:00:00Z'
@@ -189,8 +181,8 @@ export default function App() {
     } else if (role === 'instructor') {
       setCurrentUser({
         id: 'usr_inst_1',
-        name: 'Dr. Emmanuel Okafor',
-        email: 'instructor.okafor@hiit.ng',
+        name: '',
+        email: '',
         role: 'instructor',
         assignedCourseIds: ['crs_1'],
         assignedBatchIds: ['batch_1'],
@@ -201,8 +193,8 @@ export default function App() {
     } else if (role === 'registrar') {
       setCurrentUser({
         id: 'usr_reg_1',
-        name: 'Mrs. Amina Yusuf',
-        email: 'registrar@hiit.ng',
+        name: '',
+        email: '',
         role: 'registrar',
         status: 'active',
         createdAt: '2026-01-05T08:00:00Z'
@@ -211,9 +203,9 @@ export default function App() {
     } else if (role === 'student') {
       const studentProfile = students[0] || {
         id: 'usr_std_1',
-        fullName: 'Aisha Abubakar',
-        regNumber: 'HIIT/2026/001',
-        email: 'aisha.a@gmail.com',
+        fullName: '',
+        regNumber: '',
+        email: '',
         phone: '+234 812 345 6789',
         courseId: 'crs_1',
         batchId: 'batch_1'
