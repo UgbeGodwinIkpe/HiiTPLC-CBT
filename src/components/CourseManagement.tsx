@@ -118,8 +118,11 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center space-x-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black tracking-wider bg-[#002B49] text-white">
+                    Course ID: {course.id}
+                  </span>
                   <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-[#002B49] text-white">
-                    {course.code}
+                    Course Code: {course.code}
                   </span>
                   <span
                     className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
