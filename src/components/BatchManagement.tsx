@@ -151,6 +151,9 @@ export const BatchManagement: React.FC<BatchManagementProps> = ({
             <p className="text-xs font-semibold text-[#002B49] dark:text-slate-300 mt-1">
               Course: {batch.courseTitle}
             </p>
+            <p className="text-xs font-semibold text-[#002B49] dark:text-slate-300 mt-1">
+              Batch ID: {batch.id}
+            </p>
 
             <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5 text-xs text-slate-500 dark:text-slate-400">
               <div className="flex items-center justify-between">
