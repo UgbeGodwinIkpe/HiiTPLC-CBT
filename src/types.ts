@@ -49,7 +49,7 @@ export interface StudentProfile {
   batchId: string;
   batchName: string;
   status: 'active' | 'inactive';
-  password:"123456",
+  password:string,
   registeredAt: string;
 }
 
