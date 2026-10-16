@@ -2592,7 +2592,7 @@ export const INITIAL_EXAMS: Exam[] = [
     totalMarks: 30,
     shuffleQuestions: true,
     shuffleOptions: true,
-    status: 'published',
+    status: 'pending',
     createdAt: '2026-02-12T10:00:00Z',
   },
   {
@@ -2622,7 +2622,7 @@ export const INITIAL_EXAMS: Exam[] = [
     totalMarks: 100,
     shuffleQuestions: true,
     shuffleOptions: true,
-    status: 'pending',
+    status: 'published',
     createdAt: '2026-10-17T10:00:00Z',
   }
 ];
